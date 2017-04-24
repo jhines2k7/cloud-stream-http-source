@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.MessageHeaders;
@@ -38,10 +37,9 @@ public class CloudStreamHttpSourceApplication {
     public void handleRequest(@RequestBody String body, @RequestHeader(HttpHeaders.CONTENT_TYPE) Object contentType) throws MyCustomException {
         JSONObject obj = new JSONObject(body);
 
-        if(obj.getString("foo").equals("bar")) {
+        if(obj.getString("name").equals("Fizz")) {
             throw new MyCustomException();
         } else {
-            System.out.println(obj.getString("foo"));
             sendMessage(body, contentType);
         }
     }
@@ -58,7 +56,7 @@ public class CloudStreamHttpSourceApplication {
     }
 }
 
-@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Foo failed validation")
+@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Request body failed validation")
 class MyCustomException extends Exception {
     private static final long serialVersionUID = 100L;
 }
